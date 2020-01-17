@@ -25,6 +25,8 @@
 		8D3036D823BACA7400038477 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D3036D723BACA7400038477 /* NotificationView.swift */; };
 		8D3036DA23BACA7500038477 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D3036D923BACA7500038477 /* Assets.xcassets */; };
 		8D3036DD23BACA7500038477 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D3036DC23BACA7500038477 /* Preview Assets.xcassets */; };
+		8D3036FD23C89A5C00038477 /* SessionDelegater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D3036F823C8963400038477 /* SessionDelegater.swift */; };
+		8D30370223D18B5400038477 /* SessionDelegater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D3036F823C8963400038477 /* SessionDelegater.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +104,7 @@
 		8D3036DC23BACA7500038477 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8D3036DE23BACA7500038477 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D3036DF23BACA7500038477 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		8D3036F823C8963400038477 /* SessionDelegater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionDelegater.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +135,7 @@
 		8D30369323BACA6C00038477 = {
 			isa = PBXGroup;
 			children = (
+				8D3036FE23C89AAF00038477 /* Shared */,
 				8D30369E23BACA6C00038477 /* WatchDataLogger01 */,
 				8D3036B523BACA7300038477 /* WatchDataLogger01Tests */,
 				8D3036BF23BACA7300038477 /* WatchDataLogger01 WatchKit App */,
@@ -214,6 +218,14 @@
 				8D3036DC23BACA7500038477 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		8D3036FE23C89AAF00038477 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				8D3036F823C8963400038477 /* SessionDelegater.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -381,6 +393,7 @@
 			files = (
 				8D3036A023BACA6C00038477 /* AppDelegate.swift in Sources */,
 				8D3036A223BACA6C00038477 /* SceneDelegate.swift in Sources */,
+				8D3036FD23C89A5C00038477 /* SessionDelegater.swift in Sources */,
 				8D3036A423BACA6C00038477 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -397,6 +410,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D30370223D18B5400038477 /* SessionDelegater.swift in Sources */,
 				8D3036D223BACA7400038477 /* HostingController.swift in Sources */,
 				8D3036D023BACA7400038477 /* ContentView.swift in Sources */,
 				8D3036D623BACA7400038477 /* NotificationController.swift in Sources */,
