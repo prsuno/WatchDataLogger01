@@ -48,6 +48,21 @@ class SessionDelegater: NSObject, WCSessionDelegate {
     }
     #endif
     
+    // Called when a file is received.
+    //
+    func session(_ session: WCSession, didReceive file: WCSessionFile) {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let docsDirect = paths[0]
+        let audioURL = docsDirect.appendingPathComponent("recodring.m4a")
+        do{
+            try FileManager.default.moveItem(at: file.fileURL, to: audioURL)
+        }
+        catch let error as NSError {
+            print("Error moving file: \(error.description)")
+        }
+    }
+    
+    
     /*
     
     // Called when WCSession activation state is changed.

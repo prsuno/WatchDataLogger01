@@ -8,6 +8,7 @@
 
 import SwiftUI
 import AVFoundation
+import WatchConnectivity
 
 var audioRecorder: AVAudioRecorder?
 var audioPlayer: AVAudioPlayer?
@@ -51,6 +52,13 @@ struct ContentView: View {
                 })
                     {
                     Text("Stop PLY")
+                }
+                Button(action:{
+                    self.intStatus = 0
+                    self.strStatus = transferFile()
+                })
+                    {
+                    Text("Send")
                 }
             }
         }
@@ -114,6 +122,12 @@ func playAudio()->String{
 func finishPlaying()->String{
     audioPlayer?.stop()
     return "Playing audio finished successfully."
+}
+
+func transferFile()->String{
+    let url = getAudioFileURL()
+    WCSession.default.transferFile(url, metadata: nil)
+    return "File transfer finished."
 }
 
 struct ContentView_Previews: PreviewProvider {

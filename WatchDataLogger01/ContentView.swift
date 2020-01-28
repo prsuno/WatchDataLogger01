@@ -8,6 +8,7 @@
 
 import SwiftUI
 import AVFoundation
+import WatchConnectivity
 
 var audioRecorder: AVAudioRecorder?
 var audioPlayer: AVAudioPlayer?
@@ -36,6 +37,13 @@ struct ContentView: View {
             })
                 {
                 Text("Stop")
+            }
+            Button(action:{
+                self.intStatus = 0
+                self.strStatus = askReachability()
+            })
+                {
+                Text("Reachable?")
             }
         }
     }
@@ -97,6 +105,16 @@ func playAudio()->String{
 func finishPlaying()->String{
     audioPlayer?.stop()
     return "Playing audio finished successfully."
+}
+
+func askReachability()->String{
+    var char = "None"
+    if WCSession.default.isReachable == true {
+        char = "Reachable"
+    } else {
+        char = "Not reachable"
+    }
+    return char
 }
 
 struct ContentView_Previews: PreviewProvider {
