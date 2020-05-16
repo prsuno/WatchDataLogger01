@@ -29,14 +29,30 @@ struct ContentView: View {
                 //self.strStatus = getAudioFileURLString()
             })
                 {
-                Text("Start")
+                Text("Start recording")
             }
             Button(action:{
                 self.intStatus = 0
                 self.strStatus = finishRecording()
             })
                 {
-                Text("Stop")
+                Text("Stop recording")
+            }
+            Button(action:{
+                self.intStatus = 1
+                //self.strStatus = getDateTimeString()
+                self.strStatus = playAudio()
+                //self.strStatus = getAudioFileURLString()
+            })
+                {
+                Text("Start playing")
+            }
+            Button(action:{
+                self.intStatus = 0
+                self.strStatus = finishPlaying()
+            })
+                {
+                Text("Stop playing")
             }
             Button(action:{
                 self.intStatus = 0
@@ -59,7 +75,8 @@ func getDateTimeString() -> String{
 func getAudioFileURL() -> URL{
     let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     let docsDirect = paths[0]
-    let audioURL = docsDirect.appendingPathComponent(getDateTimeString()+".m4a")
+    let audioURL = docsDirect.appendingPathComponent("recodring.m4a")
+    //let audioURL = docsDirect.appendingPathComponent(getDateTimeString()+".m4a")
     return audioURL
 }
 
