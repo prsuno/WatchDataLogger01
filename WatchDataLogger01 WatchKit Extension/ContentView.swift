@@ -55,6 +55,13 @@ struct ContentView: View {
                 }
                 Button(action:{
                     self.intStatus = 0
+                    self.strStatus = askReachability()
+                })
+                    {
+                    Text("Reachable?")
+                }
+                Button(action:{
+                    self.intStatus = 0
                     self.strStatus = transferFile()
                 })
                     {
@@ -128,6 +135,16 @@ func transferFile()->String{
     let url = getAudioFileURL()
     WCSession.default.transferFile(url, metadata: nil)
     return "File transfer finished."
+}
+
+func askReachability()->String{
+    var char = "None"
+    if WCSession.default.isReachable == true {
+        char = "Reachable"
+    } else {
+        char = "Not reachable"
+    }
+    return char
 }
 
 struct ContentView_Previews: PreviewProvider {
