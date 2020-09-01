@@ -51,17 +51,25 @@ class SessionDelegater: NSObject, WCSessionDelegate {
     // Called when a file is received.
     //
     func session(_ session: WCSession, didReceive file: WCSessionFile) {
+        let atURL = file.fileURL
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let docsDirect = paths[0]
-        let audioURL = docsDirect.appendingPathComponent("recodring.m4a")
-        do{
-            try FileManager.default.moveItem(at: file.fileURL, to: audioURL)
-        }
-        catch let error as NSError {
-            print("Error moving file: \(error.description)")
+        let toURL = docsDirect.appendingPathComponent("DataFileRecievedFromWatch.m4a")
+        
+        do {
+         try FileManager.default.copyItem(at: atURL, to: toURL)
+            print("Recieved file has been successfully copied under Documents folder.")
+        }catch {
+            print("Recieved file cannot be copied under Documents folder.")
         }
     }
     
+    // Called when a file transfer is done.
+    //
+    func session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: Error?) {
+        print("File transfer from Watch has been done successfully.")
+    }
+
     
     /*
     
