@@ -8,6 +8,8 @@
 
 import Foundation
 
+let sensorDataFileName = "SensorData.csv"
+
 func getDateTimeString() -> String{
     let f = DateFormatter()
     f.dateFormat = "yyyy_MMdd_HHmmss"

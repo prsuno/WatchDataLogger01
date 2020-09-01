@@ -39,34 +39,44 @@ struct ContentView: View {
                     //self.strStatus = getAudioFileURLString()
                 })
                     {
-                    Text("PLY audio")
+                    Text("Play audio")
                 }
                 Button(action:{
                     self.strStatus = self.finishPlayAudio()
                 })
                     {
-                    Text("Stop PLY")
+                    Text("Stop Play")
                 }
                 Button(action:{
-                    self.strStatus = self.fileTransfer()
+                    self.strStatus = self.fileTransfer(fileURL: self.getAudioFileURL(), metaData: ["":""])
                 })
                     {
                     Text("Send audio file")
                 }
                 Button(action:{
-                    testDataFileSave()
+                    startSensorUpdates(intervalSeconds: 1.0)
                 })
                     {
-                    Text("Test data file save")
+                    Text("Start sensor DAQ")
                 }
-                /*
                 Button(action:{
                     stopSensorUpdates()
                 })
                     {
                     Text("Stop sensor DAQ")
                 }
-  */
+                Button(action:{
+                    self.strStatus = self.fileTransfer(fileURL: self.getSensorDataFileURL(), metaData: ["":""])
+                })
+                    {
+                    Text("Send sensor data")
+                }
+                 Button(action:{
+                     testDataFileSave()
+                 })
+                     {
+                     Text("Save test file")
+                 }
             }
         }
     }
@@ -79,6 +89,13 @@ struct ContentView: View {
         let audioURL = docsDirect.appendingPathComponent("recodringW.m4a")
         //let audioURL = docsDirect.appendingPathComponent(getDateTimeString()+".m4a")
         return audioURL
+    }
+    
+    func getSensorDataFileURL() -> URL{
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let docsDirect = paths[0]
+        let fileURL = docsDirect.appendingPathComponent("SensorData.csv")
+        return fileURL
     }
     
     func startAudioRecording()-> String{
@@ -125,9 +142,9 @@ struct ContentView: View {
         return "Finished."
     }
     
-    func fileTransfer()->String{
-        let fileURL = getAudioFileURL()
-        let metaData = ["":""]
+    func fileTransfer(fileURL: URL, metaData: [String:String])->String{
+        //let fileURL = getAudioFileURL()
+        //let metaData = ["":""]
         WCSession.default.transferFile(fileURL, metadata: metaData)
         return "File transfer initiated."
     }

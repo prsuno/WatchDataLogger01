@@ -15,8 +15,8 @@ func startSensorUpdates(intervalSeconds: Double){
     if motionManager.isDeviceMotionAvailable{
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let docsDirect = paths[0]
-        let fileURL = docsDirect.appendingPathComponent("SensorData.csv")
-        writeDataToFile(string: "attitudeX,attitudeY,attitudeZ,gyroX,gyroY,gyroZ,gravityX,gravityY,gravityZ,accX,accY,accZ\n", tofile: fileURL)
+        let datafileURL = docsDirect.appendingPathComponent(sensorDataFileName)
+        writeDataToFile(string: "attitudeX,attitudeY,attitudeZ,gyroX,gyroY,gyroZ,gravityX,gravityY,gravityZ,accX,accY,accZ\n", tofile: datafileURL)
         motionManager.deviceMotionUpdateInterval = intervalSeconds
         motionManager.startDeviceMotionUpdates(to: OperationQueue.current!,withHandler: {
             (motion:CMDeviceMotion?, error:Error?) in getMotionData(deviceMotion: motion!)
@@ -41,17 +41,32 @@ func getMotionData(deviceMotion: CMDeviceMotion){
 
 func saveMotionData(deviceMotion: CMDeviceMotion, fileURL: URL){
     writeDataToFile(string: "\(deviceMotion.attitude.pitch),attitudeY,attitudeZ,gyroX,gyroY,gyroZ,gravityX,gravityY,gravityZ,accX,accY,accZ\n", tofile: fileURL)
+    print("attitudeX:", deviceMotion.attitude.pitch)
 }
 
 func testDataFileSave(){
     let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     let docsDirect = paths[0]
-    let fileURL = docsDirect.appendingPathComponent("SensorData.csv")
-    writeDataToFile(string: "attitudeX,attitudeY,attitudeZ,gyroX,gyroY,gyroZ,gravityX,gravityY,gravityZ,accX,accY,accZ\n", tofile: fileURL)
+    let fileURL = docsDirect.appendingPathComponent(sensorDataFileName)
+    if FileManager.default.fileExists(atPath: fileURL.path) {
+      do {
+        try FileManager.default.removeItem(atPath: fileURL.path)
+      } catch {
+          print("Existing sensor data file cannot be deleted.")
+      }
+    }
+    let string = "First line"
+    let data = string.data(using: .utf8)
+    if FileManager.default.createFile(atPath: fileURL.path, contents: data, attributes: nil){
+        print("Data file was created successfully.")
+    } else {
+        print("Failed creating data file.")
+    }
 }
 
 func writeDataToFile(string: String, tofile: URL){
     let data = string.data(using: .utf8)
+    
     do{
         try data?.write(to: tofile)
         print("Data saved : \(tofile.absoluteURL)")
