@@ -54,13 +54,7 @@ struct ContentView: View {
             }
         }
     }
-    
-    func getDateTimeString() -> String{
-        let f = DateFormatter()
-        f.dateFormat = "yyyy_MMdd_HHmmss"
-        let now = Date()
-        return f.string(from: now)
-    }
+
     
     func getAudioFileURL() -> URL{
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)

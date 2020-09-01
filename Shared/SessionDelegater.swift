@@ -54,8 +54,8 @@ class SessionDelegater: NSObject, WCSessionDelegate {
         let atURL = file.fileURL
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let docsDirect = paths[0]
-        let toURL = docsDirect.appendingPathComponent("DataFileRecievedFromWatch.m4a")
-        
+        //let toURL = docsDirect.appendingPathComponent("DataFileRecievedFromWatch.m4a")
+        let toURL = docsDirect.appendingPathComponent("DataFileFromWatch"+getDateTimeString()+".m4a")
         do {
          try FileManager.default.copyItem(at: atURL, to: toURL)
             print("Recieved file has been successfully copied under Documents folder.")
