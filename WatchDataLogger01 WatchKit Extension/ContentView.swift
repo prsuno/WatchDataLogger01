@@ -51,7 +51,7 @@ struct ContentView: View {
                     self.strStatus = self.fileTransfer()
                 })
                     {
-                    Text("Send audio file")
+                    Text("Send file")
                 }
             }
         }
