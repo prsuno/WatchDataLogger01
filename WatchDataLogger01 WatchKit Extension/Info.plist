@@ -32,6 +32,8 @@
 	</dict>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>YES</string>
+	<key>NSMotionUsageDescription</key>
+	<string>YES</string>
 	<key>WKExtensionDelegateClassName</key>
 	<string>$(PRODUCT_MODULE_NAME).ExtensionDelegate</string>
 </dict>

@@ -51,8 +51,22 @@ struct ContentView: View {
                     self.strStatus = self.fileTransfer()
                 })
                     {
-                    Text("Send file")
+                    Text("Send audio file")
                 }
+                Button(action:{
+                    testDataFileSave()
+                })
+                    {
+                    Text("Test data file save")
+                }
+                /*
+                Button(action:{
+                    stopSensorUpdates()
+                })
+                    {
+                    Text("Stop sensor DAQ")
+                }
+  */
             }
         }
     }
