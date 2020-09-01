@@ -57,6 +57,7 @@ struct ContentView: View {
         }
     }
     
+    
     func getDateTimeString() -> String{
         let f = DateFormatter()
         f.dateFormat = "yyyy_MMdd_HHmmss"
