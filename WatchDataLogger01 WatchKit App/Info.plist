@@ -26,7 +26,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>WKCompanionAppBundleIdentifier</key>
-	<string>uno.WatchDataLogger01</string>
+	<string>prsuno.WatchDataLogger01</string>
 	<key>WKWatchKitApp</key>
 	<true/>
 </dict>
