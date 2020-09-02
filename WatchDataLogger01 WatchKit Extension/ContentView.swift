@@ -54,13 +54,13 @@ struct ContentView: View {
                     Text("Send audio file")
                 }
                 Button(action:{
-                    startSensorUpdates(intervalSeconds: 1.0)
+                    self.strStatus = startSensorUpdates(intervalSeconds: 1.0)
                 })
                     {
                     Text("Start sensor DAQ")
                 }
                 Button(action:{
-                    stopSensorUpdates()
+                    self.strStatus = stopSensorUpdates()
                 })
                     {
                     Text("Stop sensor DAQ")
@@ -72,7 +72,7 @@ struct ContentView: View {
                     Text("Send sensor data")
                 }
                  Button(action:{
-                     testDataFileSave()
+                    self.strStatus = testDataFileSave()
                  })
                      {
                      Text("Save test file")
@@ -143,8 +143,6 @@ struct ContentView: View {
     }
     
     func fileTransfer(fileURL: URL, metaData: [String:String])->String{
-        //let fileURL = getAudioFileURL()
-        //let metaData = ["":""]
         WCSession.default.transferFile(fileURL, metadata: metaData)
         return "File transfer initiated."
     }
