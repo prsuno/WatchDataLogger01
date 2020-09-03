@@ -16,7 +16,7 @@ func startSensorUpdates(intervalSeconds: Double)->String{
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let docsDirect = paths[0]
         let fileURL = docsDirect.appendingPathComponent(sensorDataFileName)
-        let stringfirstline = "# Time,Pitch,Roll,Yaw,RotionX,RotionY,RotationZ,GravityX,GravityY,GravityZ,AxelX,AxelY,AxelZ\n"
+        let stringfirstline = "Time,Pitch,Roll,Yaw,RotionX,RotionY,RotationZ,GravityX,GravityY,GravityZ,AxelX,AxelY,AxelZ\n"
         creatDataFile(onetimestring: stringfirstline, fileurl: fileURL)
         motionManager.deviceMotionUpdateInterval = intervalSeconds
         motionManager.startDeviceMotionUpdates(to: OperationQueue.current!,withHandler: {
@@ -24,9 +24,9 @@ func startSensorUpdates(intervalSeconds: Double)->String{
             //getMotionData(deviceMotion: motion!)
             saveMotionData(deviceMotion: motion!, fileurl: fileURL)
         })
-        return "Started sensor updates"
+        return "Started sensor updates with "+String(intervalSeconds)+"s"
     } else{
-    return "Failed sensor updates"
+    return "Failed to start sensor updates"
     }
 }
 
@@ -102,7 +102,7 @@ func appendDataToFile(string: String, fileurl: URL){
 func stopSensorUpdates()->String {
     if motionManager.isDeviceMotionAvailable{
         motionManager.stopDeviceMotionUpdates()
-        return "Stopped sensor updates"
+        return "Stopped sensor updates."
     }else {
         return "Failed stopping sensor updates"
     }

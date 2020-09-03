@@ -15,7 +15,10 @@ var audioPlayer: AVAudioPlayer?
 
 struct ContentView: View {
     
+    var valueSensingIntervals = [1.0, 2.0, 5.0, 10.0, 60.0]
+    
     @State public var strStatus: String = "status"
+    @State private var intSelectedInterval: Int = 0
     
     var body: some View {
         VStack {
@@ -23,7 +26,6 @@ struct ContentView: View {
                 Text("strStatus: \(self.strStatus)")
                 Button(action:{
                     self.strStatus = self.startAudioRecording()
-                    //self.strStatus = getAudioFileURLString()
                 })
                     {
                     Text("REC audio")
@@ -53,8 +55,13 @@ struct ContentView: View {
                     {
                     Text("Send audio file")
                 }
+                Picker("Sensing interval [s]", selection: $intSelectedInterval){
+                    ForEach(0 ..< valueSensingIntervals.count) {
+                        Text(String(self.valueSensingIntervals[$0]))
+                    }
+                }.frame(height: 40)
                 Button(action:{
-                    self.strStatus = startSensorUpdates(intervalSeconds: 1.0)
+                    self.strStatus = startSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
                 })
                     {
                     Text("Start sensor DAQ")
@@ -71,12 +78,6 @@ struct ContentView: View {
                     {
                     Text("Send sensor data")
                 }
-                 Button(action:{
-                    self.strStatus = testDataFileSave()
-                 })
-                     {
-                     Text("Save test file")
-                 }
             }
         }
     }
