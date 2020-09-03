@@ -15,7 +15,7 @@ var audioPlayer: AVAudioPlayer?
 
 struct ContentView: View {
     
-    var valueSensingIntervals = [1.0, 2.0, 5.0, 10.0, 60.0]
+    var valueSensingIntervals = [1.0, 2.0, 5.0, 10, 60]
     
     @State public var strStatus: String = "status"
     @State private var intSelectedInterval: Int = 0

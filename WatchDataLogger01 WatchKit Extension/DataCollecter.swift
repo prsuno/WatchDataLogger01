@@ -16,7 +16,7 @@ func startSensorUpdates(intervalSeconds: Double)->String{
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let docsDirect = paths[0]
         let fileURL = docsDirect.appendingPathComponent(sensorDataFileName)
-        let stringfirstline = "Time,Pitch,Roll,Yaw,RotionX,RotionY,RotationZ,GravityX,GravityY,GravityZ,AxelX,AxelY,AxelZ\n"
+        let stringfirstline = "Times,Pitch,Roll,Yaw,RotionX,RotionY,RotationZ,GravityX,GravityY,GravityZ,AxelX,AxelY,AxelZ\n"
         creatDataFile(onetimestring: stringfirstline, fileurl: fileURL)
         motionManager.deviceMotionUpdateInterval = intervalSeconds
         motionManager.startDeviceMotionUpdates(to: OperationQueue.current!,withHandler: {
@@ -46,20 +46,21 @@ func getMotionData(deviceMotion: CMDeviceMotion){
 }
 
 func saveMotionData(deviceMotion: CMDeviceMotion, fileurl: URL){
-    let datetime = getDateTimeString()
-    let string = datetime+",\(deviceMotion.attitude.pitch),\(deviceMotion.attitude.roll),\(deviceMotion.attitude.yaw),\(deviceMotion.rotationRate.x),\(deviceMotion.rotationRate.y),\(deviceMotion.rotationRate.z),\(deviceMotion.gravity.x),\(deviceMotion.gravity.y),\(deviceMotion.gravity.z),\(deviceMotion.userAcceleration.x),\(deviceMotion.userAcceleration.y),\(deviceMotion.userAcceleration.z)\n"
+    let string = "\(deviceMotion.timestamp),\(deviceMotion.attitude.pitch),\(deviceMotion.attitude.roll),\(deviceMotion.attitude.yaw),\(deviceMotion.rotationRate.x),\(deviceMotion.rotationRate.y),\(deviceMotion.rotationRate.z),\(deviceMotion.gravity.x),\(deviceMotion.gravity.y),\(deviceMotion.gravity.z),\(deviceMotion.userAcceleration.x),\(deviceMotion.userAcceleration.y),\(deviceMotion.userAcceleration.z)\n"
     appendDataToFile(string: string, fileurl: fileurl)
-    print("attitudeY:", deviceMotion.attitude.roll)
-    print("attitudeZ:", deviceMotion.attitude.yaw)
-    print("gyroX:", deviceMotion.rotationRate.x)
-    print("gyroY:", deviceMotion.rotationRate.y)
-    print("gyroZ:", deviceMotion.rotationRate.z)
-    print("gravityX:", deviceMotion.gravity.x)
-    print("gravityY:", deviceMotion.gravity.y)
-    print("gravityZ:", deviceMotion.gravity.z)
-    print("accX:", deviceMotion.userAcceleration.x)
-    print("accY:", deviceMotion.userAcceleration.y)
-    print("accZ:", deviceMotion.userAcceleration.z)
+/*
+     print("attitudeY:", deviceMotion.attitude.roll)
+     print("attitudeZ:", deviceMotion.attitude.yaw)
+     print("gyroX:", deviceMotion.rotationRate.x)
+     print("gyroY:", deviceMotion.rotationRate.y)
+     print("gyroZ:", deviceMotion.rotationRate.z)
+     print("gravityX:", deviceMotion.gravity.x)
+     print("gravityY:", deviceMotion.gravity.y)
+     print("gravityZ:", deviceMotion.gravity.z)
+     print("accX:", deviceMotion.userAcceleration.x)
+     print("accY:", deviceMotion.userAcceleration.y)
+     print("accZ:", deviceMotion.userAcceleration.z)
+     */
 }
 
 func testDataFileSave()->String{
