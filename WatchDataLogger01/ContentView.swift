@@ -19,7 +19,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            Text("strStatus: \(self.strStatus)")
+            Text(self.strStatus)
             Button(action:{
                 self.strStatus = self.startAudioRecording()
                 //self.strStatus = getAudioFileURLString()

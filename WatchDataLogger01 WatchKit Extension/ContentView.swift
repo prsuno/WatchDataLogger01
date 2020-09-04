@@ -9,21 +9,25 @@
 import SwiftUI
 import AVFoundation
 import WatchConnectivity
+import HealthKit
 
 var audioRecorder: AVAudioRecorder?
 var audioPlayer: AVAudioPlayer?
 
 struct ContentView: View {
     
-    var valueSensingIntervals = [1.0, 2.0, 5.0, 10, 60]
+    var valueSensingIntervals = [1.0, 2.0, 5.0, 10, 60, 0.5]
     
     @State public var strStatus: String = "status"
     @State private var intSelectedInterval: Int = 0
     
+    let healthStore = HKHealthStore()
+    var session: HKWorkoutSession!
+    
     var body: some View {
         VStack {
             ScrollView{
-                Text("strStatus: \(self.strStatus)")
+                Text(self.strStatus)
                 Button(action:{
                     self.strStatus = self.startAudioRecording()
                 })
@@ -62,12 +66,14 @@ struct ContentView: View {
                 }.frame(height: 40)
                 Button(action:{
                     self.strStatus = startSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
+                    self.startWorkoutSession()
                 })
                     {
                     Text("Start sensor DAQ")
                 }
                 Button(action:{
                     self.strStatus = stopSensorUpdates()
+                    self.stopWorkoutSession()
                 })
                     {
                     Text("Stop sensor DAQ")
@@ -81,8 +87,6 @@ struct ContentView: View {
             }
         }
     }
-    
-
     
     func getAudioFileURL() -> URL{
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -147,6 +151,22 @@ struct ContentView: View {
         WCSession.default.transferFile(fileURL, metadata: metaData)
         return "File transfer initiated."
     }
+
+    func startWorkoutSession() {
+        let config = HKWorkoutConfiguration()
+        config.activityType = .other
+        do {
+            let session = try HKWorkoutSession(healthStore: self.healthStore, configuration: config)
+            session.startActivity(with: nil)
+        } catch {
+            // Handle exceptions.
+        }
+    }
+
+    func stopWorkoutSession() {
+        guard let workoutSession = self.session else { return }
+        workoutSession.stopActivity(with: nil)
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
@@ -154,3 +174,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+

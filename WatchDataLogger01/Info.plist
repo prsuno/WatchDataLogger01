@@ -22,6 +22,8 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSHealthShareUsageDescription</key>
+	<string>For data logging by WDL01</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>YES</string>
 	<key>UIApplicationSceneManifest</key>
