@@ -11,23 +11,29 @@ import CoreMotion
 
 let motionManager = CMMotionManager()
 
-func startSensorUpdates(intervalSeconds: Double)->String{
-    if motionManager.isDeviceMotionAvailable{
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let docsDirect = paths[0]
-        let fileURL = docsDirect.appendingPathComponent(sensorDataFileName)
-        let stringfirstline = "Timestamp,Pitch,Roll,Yaw,RotionX,RotionY,RotationZ,GravityX,GravityY,GravityZ,AxelX,AxelY,AxelZ\n"
-        creatDataFile(onetimestring: stringfirstline, fileurl: fileURL)
-        motionManager.deviceMotionUpdateInterval = intervalSeconds
-        motionManager.startDeviceMotionUpdates(to: OperationQueue.current!,withHandler: {
-            (motion:CMDeviceMotion?, error:Error?) in
-            //getMotionData(deviceMotion: motion!)
-            saveMotionData(deviceMotion: motion!, fileurl: fileURL)
-        })
-        return "Started sensor updates with "+String(intervalSeconds)+"s"
-    } else{
-    return "Failed to start sensor updates"
+func startSensorUpdates(intervalSeconds: Double, sensingTypes: String)->String{
+    var stringreturn = "default"
+    if sensingTypes == "Motion"{
+        if motionManager.isDeviceMotionAvailable{
+            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+            let docsDirect = paths[0]
+            let fileURL = docsDirect.appendingPathComponent(sensorDataFileName)
+            let stringfirstline = "Timestamp,Pitch,Roll,Yaw,RotX,RotY,RotZ,GravX,GravY,GravZ,AxelX,AxelY,AxelZ\n"
+            creatDataFile(onetimestring: stringfirstline, fileurl: fileURL)
+            motionManager.deviceMotionUpdateInterval = intervalSeconds
+            motionManager.startDeviceMotionUpdates(to: OperationQueue.current!,withHandler: {
+                (motion:CMDeviceMotion?, error:Error?) in
+                //getMotionData(deviceMotion: motion!)
+                saveMotionData(deviceMotion: motion!, fileurl: fileURL)
+            })
+            stringreturn = "Started motion sensor DAQ with "+String(intervalSeconds)+"s"
+        } else{
+        stringreturn = "Failed motion sensor DAQ"
+        }
+    } else if sensingTypes == "HeartRate" {
+        stringreturn = "Selected heart rate DAQ"
     }
+    return stringreturn
 }
 
 func getMotionData(deviceMotion: CMDeviceMotion){

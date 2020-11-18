@@ -16,10 +16,12 @@ var audioPlayer: AVAudioPlayer?
 
 struct ContentView: View {
     
-    var valueSensingIntervals = [1.0, 2.0, 5.0, 10, 60, 0.5]
+    var valueSensingIntervals = [1.0, 2.0, 5.0, 10, 60, 0.5, 0.1, 0.05, 0.01]
+    var valueSensingTypes = ["Motion", "HeartRate", "Audio"]
     
     @State public var strStatus: String = "status"
     @State private var intSelectedInterval: Int = 0
+    @State private var intSelectedTypes: Int = 0
     
     let healthStore = HKHealthStore()
     var session: HKWorkoutSession!
@@ -29,17 +31,57 @@ struct ContentView: View {
             ScrollView{
                 Text(self.strStatus)
                 Button(action:{
+                    if self.valueSensingTypes[self.intSelectedTypes] == "Audio" {
+                        self.strStatus = self.startAudioRecording()
+                    } else {
+                        self.strStatus = startSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval], sensingTypes: self.valueSensingTypes[self.intSelectedTypes])
+                        self.startWorkoutSession()
+                    }
+                })
+                    {
+                    Text("Start sensor DAQ")
+                }
+                Button(action:{
+                    if self.valueSensingTypes[self.intSelectedTypes] == "Audio" {
+                        self.strStatus = self.finishAudioRecording()
+                    } else {
+                    self.strStatus = stopSensorUpdates()
+                    self.stopWorkoutSession()
+                    }
+                })
+                    {
+                    Text("Stop sensor DAQ")
+                }
+                Button(action:{
+                    self.strStatus = self.fileTransfer(fileURL: self.getSensorDataFileURL(), metaData: ["":""])
+                })
+                    {
+                    Text("Send sensor data")
+                }
+                Picker("Sensing data type", selection: $intSelectedTypes){
+                    ForEach(0 ..< valueSensingTypes.count) {
+                        Text(self.valueSensingTypes[$0])
+                    }
+                }.frame(height: 40)
+                Picker("DAQ interval [s]", selection: $intSelectedInterval){
+                    ForEach(0 ..< valueSensingIntervals.count) {
+                        Text(String(self.valueSensingIntervals[$0]))
+                    }
+                }.frame(height: 40)
+                /*
+                Button(action:{
                     self.strStatus = self.startAudioRecording()
                 })
                     {
-                    Text("REC audio")
+                    Text("Start audio rec")
                 }
                 Button(action:{
                     self.strStatus = self.finishAudioRecording()
                 })
                     {
-                    Text("Stop REC")
+                    Text("Stop audio rec")
                 }
+                 */
                 Button(action:{
                     self.strStatus = self.playAudio()
                     //self.strStatus = getAudioFileURLString()
@@ -51,38 +93,13 @@ struct ContentView: View {
                     self.strStatus = self.finishPlayAudio()
                 })
                     {
-                    Text("Stop Play")
+                    Text("Stop audio")
                 }
                 Button(action:{
                     self.strStatus = self.fileTransfer(fileURL: self.getAudioFileURL(), metaData: ["":""])
                 })
                     {
                     Text("Send audio file")
-                }
-                Picker("Sensing interval [s]", selection: $intSelectedInterval){
-                    ForEach(0 ..< valueSensingIntervals.count) {
-                        Text(String(self.valueSensingIntervals[$0]))
-                    }
-                }.frame(height: 40)
-                Button(action:{
-                    self.strStatus = startSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
-                    self.startWorkoutSession()
-                })
-                    {
-                    Text("Start sensor DAQ")
-                }
-                Button(action:{
-                    self.strStatus = stopSensorUpdates()
-                    self.stopWorkoutSession()
-                })
-                    {
-                    Text("Stop sensor DAQ")
-                }
-                Button(action:{
-                    self.strStatus = self.fileTransfer(fileURL: self.getSensorDataFileURL(), metaData: ["":""])
-                })
-                    {
-                    Text("Send sensor data")
                 }
             }
         }
@@ -135,16 +152,16 @@ struct ContentView: View {
             audioPlayer = sound
             sound.prepareToPlay()
             sound.play()
-            return "PLY audio started."
+            return "Play audio started."
         }
         catch {
-            return "PLY audio error."
+            return "Play audio error."
         }
     }
     
     func finishPlayAudio()->String{
         audioPlayer?.stop()
-        return "Finished."
+        return "Play audio finished."
     }
     
     func fileTransfer(fileURL: URL, metaData: [String:String])->String{

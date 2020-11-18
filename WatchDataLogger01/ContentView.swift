@@ -44,7 +44,7 @@ struct ContentView: View {
                 self.strStatus = self.finishPlayAudio()
             })
                 {
-                Text("Stop Play audio")
+                Text("Stop Play")
             }
             Button(action:{
                 self.strStatus = self.askReachability()
