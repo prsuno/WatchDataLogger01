@@ -17,7 +17,9 @@ var audioPlayer: AVAudioPlayer?
 struct ContentView: View {
     
     var valueSensingIntervals = [1.0, 2.0, 5.0, 10, 60, 0.5, 0.1, 0.05, 0.01]
-    var valueSensingTypes = ["Motion", "HeartRate", "Audio"]
+    var valueSensingTypes = ["Audio", "Motion", "HeartRate"]
+
+
     
     @State public var strStatus: String = "status"
     @State private var intSelectedInterval: Int = 0
@@ -33,9 +35,11 @@ struct ContentView: View {
                 Button(action:{
                     if self.valueSensingTypes[self.intSelectedTypes] == "Audio" {
                         self.strStatus = self.startAudioRecording()
-                    } else {
-                        self.strStatus = startSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval], sensingTypes: self.valueSensingTypes[self.intSelectedTypes])
+                    } else if self.valueSensingTypes[self.intSelectedTypes] == "Motion" {
+                        self.strStatus = startMotionSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
                         self.startWorkoutSession()
+                    } else if self.valueSensingTypes[self.intSelectedTypes] == "HeartRate" {
+                        self.strStatus = startHeartRateSensorUpdates()
                     }
                 })
                     {
@@ -44,9 +48,12 @@ struct ContentView: View {
                 Button(action:{
                     if self.valueSensingTypes[self.intSelectedTypes] == "Audio" {
                         self.strStatus = self.finishAudioRecording()
-                    } else {
-                    self.strStatus = stopSensorUpdates()
-                    self.stopWorkoutSession()
+                    } else if self.valueSensingTypes[self.intSelectedTypes] == "Motion" {
+                        self.strStatus = stopMotionSensorUpdates()
+                        self.stopWorkoutSession()
+                    } else if self.valueSensingTypes[self.intSelectedTypes] == "HeartRate" {
+                        self.strStatus = stopHeartRateSensorUpdates()
+                        self.stopWorkoutSession()
                     }
                 })
                     {
@@ -104,6 +111,8 @@ struct ContentView: View {
             }
         }
     }
+    
+
     
     func getAudioFileURL() -> URL{
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)

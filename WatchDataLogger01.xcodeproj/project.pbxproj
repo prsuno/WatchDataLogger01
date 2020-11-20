@@ -113,6 +113,7 @@
 		8D3036F823C8963400038477 /* SessionDelegater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionDelegater.swift; sourceTree = "<group>"; };
 		8D3A409C24FE290D00CEDD6E /* CommonFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFunctions.swift; sourceTree = "<group>"; };
 		8D3A40A024FE2F1B00CEDD6E /* SensorDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorDataManager.swift; sourceTree = "<group>"; };
+		8D8DC7A2256542AA00CF35CB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +153,7 @@
 		8D30369323BACA6C00038477 = {
 			isa = PBXGroup;
 			children = (
+				8D8DC7A2256542AA00CF35CB /* README.md */,
 				8D3036FE23C89AAF00038477 /* Shared */,
 				8D30369E23BACA6C00038477 /* WatchDataLogger01 */,
 				8D3036B523BACA7300038477 /* WatchDataLogger01Tests */,

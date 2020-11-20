@@ -9,29 +9,41 @@
 import Foundation
 import CoreMotion
 
+//
+// Heart rate data acquisition
+//
+
+func startHeartRateSensorUpdates()->String{
+    return "Not available"
+}
+
+func stopHeartRateSensorUpdates()->String {
+    return "Not available"
+}
+
+//
+// Motion data acquisition
+//
+
 let motionManager = CMMotionManager()
 
-func startSensorUpdates(intervalSeconds: Double, sensingTypes: String)->String{
-    var stringreturn = "default"
-    if sensingTypes == "Motion"{
-        if motionManager.isDeviceMotionAvailable{
-            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-            let docsDirect = paths[0]
-            let fileURL = docsDirect.appendingPathComponent(sensorDataFileName)
-            let stringfirstline = "Timestamp,Pitch,Roll,Yaw,RotX,RotY,RotZ,GravX,GravY,GravZ,AxelX,AxelY,AxelZ\n"
-            creatDataFile(onetimestring: stringfirstline, fileurl: fileURL)
-            motionManager.deviceMotionUpdateInterval = intervalSeconds
-            motionManager.startDeviceMotionUpdates(to: OperationQueue.current!,withHandler: {
-                (motion:CMDeviceMotion?, error:Error?) in
-                //getMotionData(deviceMotion: motion!)
-                saveMotionData(deviceMotion: motion!, fileurl: fileURL)
-            })
-            stringreturn = "Started motion sensor DAQ with "+String(intervalSeconds)+"s"
-        } else{
-        stringreturn = "Failed motion sensor DAQ"
-        }
-    } else if sensingTypes == "HeartRate" {
-        stringreturn = "Selected heart rate DAQ"
+func startMotionSensorUpdates(intervalSeconds: Double)->String{
+    var stringreturn = "Default motion sensor"
+    if motionManager.isDeviceMotionAvailable{
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let docsDirect = paths[0]
+        let fileURL = docsDirect.appendingPathComponent(sensorDataFileName)
+        let stringfirstline = "Timestamp,Pitch,Roll,Yaw,RotX,RotY,RotZ,GravX,GravY,GravZ,AxelX,AxelY,AxelZ\n"
+        creatDataFile(onetimestring: stringfirstline, fileurl: fileURL)
+        motionManager.deviceMotionUpdateInterval = intervalSeconds
+        motionManager.startDeviceMotionUpdates(to: OperationQueue.current!,withHandler: {
+            (motion:CMDeviceMotion?, error:Error?) in
+            //getMotionData(deviceMotion: motion!)
+            saveMotionData(deviceMotion: motion!, fileurl: fileURL)
+        })
+        stringreturn = "Started motion sensor DAQ with "+String(intervalSeconds)+"s"
+    } else{
+    stringreturn = "Failed motion sensor DAQ"
     }
     return stringreturn
 }
@@ -55,6 +67,20 @@ func saveMotionData(deviceMotion: CMDeviceMotion, fileurl: URL){
     let string = "\(deviceMotion.timestamp),\(deviceMotion.attitude.pitch),\(deviceMotion.attitude.roll),\(deviceMotion.attitude.yaw),\(deviceMotion.rotationRate.x),\(deviceMotion.rotationRate.y),\(deviceMotion.rotationRate.z),\(deviceMotion.gravity.x),\(deviceMotion.gravity.y),\(deviceMotion.gravity.z),\(deviceMotion.userAcceleration.x),\(deviceMotion.userAcceleration.y),\(deviceMotion.userAcceleration.z)\n"
     appendDataToFile(string: string, fileurl: fileurl)
 }
+
+func stopMotionSensorUpdates()->String {
+    if motionManager.isDeviceMotionAvailable{
+        motionManager.stopDeviceMotionUpdates()
+        return "Stopped motion sensor updates."
+    }else {
+        return "Failed stopping motion sensor updates"
+    }
+}
+
+
+//
+// Common data file handling functions
+//
 
 func testDataFileSave()->String{
     let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -90,14 +116,5 @@ func appendDataToFile(string: String, fileurl: URL){
         outputStream.close()
     } else {
         print("Unable to open file for appending data.")
-    }
-}
-
-func stopSensorUpdates()->String {
-    if motionManager.isDeviceMotionAvailable{
-        motionManager.stopDeviceMotionUpdates()
-        return "Stopped sensor updates."
-    }else {
-        return "Failed stopping sensor updates"
     }
 }
