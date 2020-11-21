@@ -26,7 +26,7 @@ func startMotionSensorUpdates(intervalSeconds: Double)->String{
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let docsDirect = paths[0]
         let fileURL = docsDirect.appendingPathComponent(sensorDataFileName)
-        let stringfirstline = "Timestamp,Pitch,Roll,Yaw,RotX,RotY,RotZ,GravX,GravY,GravZ,AxelX,AxelY,AxelZ\n"
+        let stringfirstline = "Timestamp,DateTime,Pitch,Roll,Yaw,RotX,RotY,RotZ,GravX,GravY,GravZ,AxelX,AxelY,AxelZ\n"
         creatDataFile(onetimestring: stringfirstline, fileurl: fileURL)
         motionManager.deviceMotionUpdateInterval = intervalSeconds
         motionManager.startDeviceMotionUpdates(to: OperationQueue.current!,withHandler: {
@@ -57,7 +57,7 @@ func getMotionData(deviceMotion: CMDeviceMotion){
 }
 
 func saveMotionData(deviceMotion: CMDeviceMotion, fileurl: URL){
-    let string = "\(deviceMotion.timestamp),\(deviceMotion.attitude.pitch),\(deviceMotion.attitude.roll),\(deviceMotion.attitude.yaw),\(deviceMotion.rotationRate.x),\(deviceMotion.rotationRate.y),\(deviceMotion.rotationRate.z),\(deviceMotion.gravity.x),\(deviceMotion.gravity.y),\(deviceMotion.gravity.z),\(deviceMotion.userAcceleration.x),\(deviceMotion.userAcceleration.y),\(deviceMotion.userAcceleration.z)\n"
+    let string = "\(deviceMotion.timestamp), \(getDateTimeString()),\(deviceMotion.attitude.pitch),\(deviceMotion.attitude.roll),\(deviceMotion.attitude.yaw),\(deviceMotion.rotationRate.x),\(deviceMotion.rotationRate.y),\(deviceMotion.rotationRate.z),\(deviceMotion.gravity.x),\(deviceMotion.gravity.y),\(deviceMotion.gravity.z),\(deviceMotion.userAcceleration.x),\(deviceMotion.userAcceleration.y),\(deviceMotion.userAcceleration.z)\n"
     appendDataToFile(string: string, fileurl: fileurl)
 }
 
