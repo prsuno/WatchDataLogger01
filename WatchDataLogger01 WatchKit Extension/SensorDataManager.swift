@@ -11,15 +11,8 @@ import CoreMotion
 
 //
 // Heart rate data acquisition
-//
+// All functionalities are implemented by WorkoutManager.swift.
 
-func startHeartRateSensorUpdates()->String{
-    return "Not available"
-}
-
-func stopHeartRateSensorUpdates()->String {
-    return "Not available"
-}
 
 //
 // Motion data acquisition

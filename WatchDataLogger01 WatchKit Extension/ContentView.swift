@@ -16,10 +16,9 @@ var audioPlayer: AVAudioPlayer?
 struct ContentView: View {
     
     var valueSensingIntervals = [1.0, 2.0, 5.0, 10, 60, 0.5, 0.1, 0.05, 0.01]
-    var valueSensingTypes = ["Audio", "Motion", "HeartRate"]
+    var valueSensingTypes = ["Audio", "Motion", "HeartRate", "Motion and HeartRate"]
 
     var workoutSession: WorkoutManager
-    
     @State var workoutInProgress = false
     
     @State public var strStatus: String = "status"
@@ -31,7 +30,11 @@ struct ContentView: View {
         VStack {
             ScrollView{
                 Text(self.strStatus)
-                Text("Workout progress status: "+String(workoutInProgress))
+                if workoutInProgress {
+                    Text("Workout session in progress.")
+                } else {
+                    Text("Workout session not in progress.")
+                }
                 Button(action:{
                     if self.valueSensingTypes[self.intSelectedTypes] == "Audio" {
                         self.strStatus = self.startAudioRecording()
@@ -39,10 +42,14 @@ struct ContentView: View {
                         self.strStatus = startMotionSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
                         //self.startWorkoutSession()
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "HeartRate" {
-                        //self.strStatus = startHeartRateSensorUpdates()
                         workoutSession.requestAuthorization()
                         workoutSession.startWorkout()
                         workoutInProgress = true
+                    } else if self.valueSensingTypes[self.intSelectedTypes] == "Motion and HeartRate" {
+                        workoutSession.requestAuthorization()
+                        workoutSession.startWorkout()
+                        workoutInProgress = true
+                        self.strStatus = startMotionSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
                     }
                 })
                     {
@@ -55,7 +62,10 @@ struct ContentView: View {
                         self.strStatus = stopMotionSensorUpdates()
                         //self.stopWorkoutSession()
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "HeartRate" {
-                        //self.strStatus = stopHeartRateSensorUpdates()
+                        workoutSession.endWorkout()
+                        workoutInProgress = false
+                    } else if self.valueSensingTypes[self.intSelectedTypes] == "Motion and HeartRate" {
+                        self.strStatus = stopMotionSensorUpdates()
                         workoutSession.endWorkout()
                         workoutInProgress = false
                     }
@@ -167,24 +177,16 @@ struct ContentView: View {
         WCSession.default.transferFile(fileURL, metadata: metaData)
         return "File transfer initiated."
     }
-
-    /*
-    func startWorkoutSession() {
-        let config = HKWorkoutConfiguration()
-        config.activityType = .other
-        do {
-            let session = try HKWorkoutSession(healthStore: self.healthStore, configuration: config)
-            session.startActivity(with: nil)
-        } catch {
-            // Handle exceptions.
-        }
+    
+    // Convert the seconds into seconds, minutes, hours.
+    func secondsToHoursMinutesSeconds (seconds: Int) -> (Int, Int, Int) {
+      return (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
     }
-
-    func stopWorkoutSession() {
-        guard let workoutSession = self.session else { return }
-        workoutSession.stopActivity(with: nil)
+    
+    // Convert the seconds, minutes, hours into a string.
+    func elapsedTimeString(elapsed: (h: Int, m: Int, s: Int)) -> String {
+        return String(format: "%d:%02d:%02d", elapsed.h, elapsed.m, elapsed.s)
     }
- */
 }
 
 struct ContentView_Previews: PreviewProvider {
