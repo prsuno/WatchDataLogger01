@@ -31,7 +31,9 @@
 		<string>com.apple.watchkit</string>
 	</dict>
 	<key>NSHealthShareUsageDescription</key>
-	<string>For data logging by WDL01</string>
+	<string>Your workout related data will be used to display your saved workouts in SpeedySloth.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Workouts tracked by WDL01 on Apple Watch will be saved to HealthKit.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>YES</string>
 	<key>NSMotionUsageDescription</key>

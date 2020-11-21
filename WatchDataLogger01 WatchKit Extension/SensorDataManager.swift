@@ -1,5 +1,5 @@
 //
-//  DataCollecter.swift
+//  SensorDataManager.swift
 //  WatchDataLogger01
 //
 //  Created by Uno on 2020/09/01.

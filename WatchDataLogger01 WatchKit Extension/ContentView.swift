@@ -9,7 +9,6 @@
 import SwiftUI
 import AVFoundation
 import WatchConnectivity
-import HealthKit
 
 var audioRecorder: AVAudioRecorder?
 var audioPlayer: AVAudioPlayer?
@@ -19,27 +18,31 @@ struct ContentView: View {
     var valueSensingIntervals = [1.0, 2.0, 5.0, 10, 60, 0.5, 0.1, 0.05, 0.01]
     var valueSensingTypes = ["Audio", "Motion", "HeartRate"]
 
-
+    var workoutSession: WorkoutManager
+    
+    @State var workoutInProgress = false
     
     @State public var strStatus: String = "status"
     @State private var intSelectedInterval: Int = 0
     @State private var intSelectedTypes: Int = 0
     
-    let healthStore = HKHealthStore()
-    var session: HKWorkoutSession!
     
     var body: some View {
         VStack {
             ScrollView{
                 Text(self.strStatus)
+                Text("Workout progress status: "+String(workoutInProgress))
                 Button(action:{
                     if self.valueSensingTypes[self.intSelectedTypes] == "Audio" {
                         self.strStatus = self.startAudioRecording()
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "Motion" {
                         self.strStatus = startMotionSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
-                        self.startWorkoutSession()
+                        //self.startWorkoutSession()
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "HeartRate" {
-                        self.strStatus = startHeartRateSensorUpdates()
+                        //self.strStatus = startHeartRateSensorUpdates()
+                        workoutSession.requestAuthorization()
+                        workoutSession.startWorkout()
+                        workoutInProgress = true
                     }
                 })
                     {
@@ -50,10 +53,11 @@ struct ContentView: View {
                         self.strStatus = self.finishAudioRecording()
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "Motion" {
                         self.strStatus = stopMotionSensorUpdates()
-                        self.stopWorkoutSession()
+                        //self.stopWorkoutSession()
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "HeartRate" {
-                        self.strStatus = stopHeartRateSensorUpdates()
-                        self.stopWorkoutSession()
+                        //self.strStatus = stopHeartRateSensorUpdates()
+                        workoutSession.endWorkout()
+                        workoutInProgress = false
                     }
                 })
                     {
@@ -75,20 +79,6 @@ struct ContentView: View {
                         Text(String(self.valueSensingIntervals[$0]))
                     }
                 }.frame(height: 40)
-                /*
-                Button(action:{
-                    self.strStatus = self.startAudioRecording()
-                })
-                    {
-                    Text("Start audio rec")
-                }
-                Button(action:{
-                    self.strStatus = self.finishAudioRecording()
-                })
-                    {
-                    Text("Stop audio rec")
-                }
-                 */
                 Button(action:{
                     self.strStatus = self.playAudio()
                     //self.strStatus = getAudioFileURLString()
@@ -178,6 +168,7 @@ struct ContentView: View {
         return "File transfer initiated."
     }
 
+    /*
     func startWorkoutSession() {
         let config = HKWorkoutConfiguration()
         config.activityType = .other
@@ -193,11 +184,12 @@ struct ContentView: View {
         guard let workoutSession = self.session else { return }
         workoutSession.stopActivity(with: nil)
     }
+ */
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(workoutSession: WorkoutManager())
     }
 }
 
