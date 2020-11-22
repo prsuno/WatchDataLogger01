@@ -31,9 +31,9 @@ struct ContentView: View {
             ScrollView{
                 Text(self.strStatus)
                 if workoutInProgress {
-                    Text("Workout session in progress.")
+                    Text("Workout session: ON")
                 } else {
-                    Text("Workout session not in progress.")
+                    Text("Workout session: OFF")
                 }
                 Button(action:{
                     if self.valueSensingTypes[self.intSelectedTypes] == "Audio" {

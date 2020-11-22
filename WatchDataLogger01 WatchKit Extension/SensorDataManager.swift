@@ -31,7 +31,6 @@ func startMotionSensorUpdates(intervalSeconds: Double)->String{
         motionManager.deviceMotionUpdateInterval = intervalSeconds
         motionManager.startDeviceMotionUpdates(to: OperationQueue.current!,withHandler: {
             (motion:CMDeviceMotion?, error:Error?) in
-            //getMotionData(deviceMotion: motion!)
             saveMotionData(deviceMotion: motion!, fileurl: fileURL)
         })
         stringreturn = "Started motion sensor DAQ with "+String(intervalSeconds)+"s"
@@ -57,7 +56,8 @@ func getMotionData(deviceMotion: CMDeviceMotion){
 }
 
 func saveMotionData(deviceMotion: CMDeviceMotion, fileurl: URL){
-    let string = "\(deviceMotion.timestamp), \(getDateTimeMilisecString()),\(deviceMotion.attitude.pitch),\(deviceMotion.attitude.roll),\(deviceMotion.attitude.yaw),\(deviceMotion.rotationRate.x),\(deviceMotion.rotationRate.y),\(deviceMotion.rotationRate.z),\(deviceMotion.gravity.x),\(deviceMotion.gravity.y),\(deviceMotion.gravity.z),\(deviceMotion.userAcceleration.x),\(deviceMotion.userAcceleration.y),\(deviceMotion.userAcceleration.z)\n"
+    let datetimemilisecstring = getDateTimeMilisecString()
+    let string = "\(deviceMotion.timestamp), \(datetimemilisecstring),\(deviceMotion.attitude.pitch),\(deviceMotion.attitude.roll),\(deviceMotion.attitude.yaw),\(deviceMotion.rotationRate.x),\(deviceMotion.rotationRate.y),\(deviceMotion.rotationRate.z),\(deviceMotion.gravity.x),\(deviceMotion.gravity.y),\(deviceMotion.gravity.z),\(deviceMotion.userAcceleration.x),\(deviceMotion.userAcceleration.y),\(deviceMotion.userAcceleration.z)\n"
     appendDataToFile(string: string, fileurl: fileurl)
 }
 
