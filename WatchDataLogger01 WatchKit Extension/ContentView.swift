@@ -12,16 +12,20 @@ import WatchConnectivity
 
 var audioRecorder: AVAudioRecorder?
 var audioPlayer: AVAudioPlayer?
+var dateDAQStarted = Date()
+var dateDAQEnded = Date()
 
 struct ContentView: View {
     
+    var valueSensingDurations = [1.0, 10, 30, 60, 120, 240, 480, 720]
+    var valueSensingTypes = ["Audio", "Motion", "HeartRate", "Motion and HeartRate", "Acceleration"]
     var valueSensingIntervals = [1.0, 2.0, 5.0, 10, 60, 0.5, 0.1, 0.05, 0.01]
-    var valueSensingTypes = ["Audio", "Motion", "HeartRate", "Motion and HeartRate"]
-
+    
     var workoutSession: WorkoutManager
     @State var workoutInProgress = false
     
     @State public var strStatus: String = "status"
+    @State private var intSelectedDuration: Int = 0
     @State private var intSelectedInterval: Int = 0
     @State private var intSelectedTypes: Int = 0
     
@@ -50,6 +54,8 @@ struct ContentView: View {
                         workoutSession.startWorkout()
                         workoutInProgress = true
                         self.strStatus = startMotionSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
+                    } else if self.valueSensingTypes[self.intSelectedTypes] == "Acceleration" {
+                        self.strStatus = startAccelerationSensorUpdates(durationMinutes: self.valueSensingDurations[self.intSelectedDuration])
                     }
                 })
                     {
@@ -68,6 +74,8 @@ struct ContentView: View {
                         self.strStatus = stopMotionSensorUpdates()
                         workoutSession.endWorkout()
                         workoutInProgress = false
+                    } else if self.valueSensingTypes[self.intSelectedTypes] == "Acceleration" {
+                        self.strStatus = stopAccelerationSensorUpdates()
                     }
                 })
                     {
@@ -79,6 +87,11 @@ struct ContentView: View {
                     {
                     Text("Send sensor data")
                 }
+                Picker("Sensing duration [min]", selection: $intSelectedDuration){
+                    ForEach(0 ..< valueSensingDurations.count) {
+                        Text(String(self.valueSensingDurations[$0]))
+                    }
+                }.frame(height: 40)
                 Picker("Sensing data type", selection: $intSelectedTypes){
                     ForEach(0 ..< valueSensingTypes.count) {
                         Text(self.valueSensingTypes[$0])
@@ -89,6 +102,7 @@ struct ContentView: View {
                         Text(String(self.valueSensingIntervals[$0]))
                     }
                 }.frame(height: 40)
+                /*
                 Button(action:{
                     self.strStatus = self.playAudio()
                     //self.strStatus = getAudioFileURLString()
@@ -102,6 +116,7 @@ struct ContentView: View {
                     {
                     Text("Stop audio")
                 }
+ */
                 Button(action:{
                     self.strStatus = self.fileTransfer(fileURL: self.getAudioFileURL(), metaData: ["":""])
                 })

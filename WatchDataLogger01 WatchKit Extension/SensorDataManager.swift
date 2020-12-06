@@ -13,6 +13,53 @@ import CoreMotion
 // Heart rate data acquisition
 // All functionalities are implemented by WorkoutManager.swift.
 
+//
+// Acceleration data acquisition
+//
+
+extension CMSensorDataList: Sequence {
+    public typealias Iterator = NSFastEnumerationIterator
+
+    public func makeIterator() -> NSFastEnumerationIterator {
+        return NSFastEnumerationIterator(self)
+    }
+}
+
+let sensorrecorder = CMSensorRecorder()
+
+func startAccelerationSensorUpdates(durationMinutes: Double)->String{
+    dateDAQStarted = Date()
+    var stringreturn = "Acceleration DAQ failed."
+    if CMSensorRecorder.isAccelerometerRecordingAvailable() {
+        sensorrecorder.recordAccelerometer(forDuration: durationMinutes * 60)
+        stringreturn = "Acceleration DAQ started at \(convertDateTimeString(now: dateDAQStarted)) for \(durationMinutes) [min]"
+    }
+    return stringreturn
+}
+
+func stopAccelerationSensorUpdates()->String {
+    dateDAQEnded = Date()
+    var stringreturn = "Acceleration data retrieve failed"
+    if let listCMSensorData = sensorrecorder.accelerometerData(from: dateDAQStarted, to: dateDAQEnded){
+        stringreturn = "Acceleration data retrieved at \(convertDateTimeString(now: dateDAQEnded))"
+        //print(stringreturn)
+        //print(listCMSensorData)
+        
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let docsDirect = paths[0]
+        let fileURL = docsDirect.appendingPathComponent(sensorDataFileName)
+        let stringfirstline = "DAQ started at \(convertDateTimeString(now: dateDAQStarted))\n"
+        creatDataFile(onetimestring: stringfirstline, fileurl: fileURL)
+        
+        for (index, data) in (listCMSensorData.enumerated()) {
+            let stringData = "\(data)\n"
+            appendDataToFile(string: stringData, fileurl: fileURL)
+            //print(index, data)
+        }
+        
+    }
+    return stringreturn
+}
 
 //
 // Motion data acquisition

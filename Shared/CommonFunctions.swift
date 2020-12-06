@@ -17,6 +17,12 @@ func getDateTimeString() -> String{
     return f.string(from: now)
 }
 
+func convertDateTimeString(now: Date) -> String{
+    let f = DateFormatter()
+    f.dateFormat = "yyyy/MM/dd_HH:mm:ss"
+    return f.string(from: now)
+}
+
 func getDateTimeMilisecString() -> String{
     let f = DateFormatter()
     f.dateFormat = "yyyy_MMdd_HHmm_ss_SSS"
