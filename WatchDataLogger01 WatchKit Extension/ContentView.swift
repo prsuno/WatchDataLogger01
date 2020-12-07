@@ -75,7 +75,7 @@ struct ContentView: View {
                         workoutSession.endWorkout()
                         workoutInProgress = false
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "Acceleration" {
-                        self.strStatus = stopAccelerationSensorUpdates()
+                        self.strStatus = stopAccelerationSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
                     }
                 })
                     {

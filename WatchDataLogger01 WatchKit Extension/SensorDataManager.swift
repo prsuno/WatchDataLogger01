@@ -37,7 +37,7 @@ func startAccelerationSensorUpdates(durationMinutes: Double)->String{
     return stringreturn
 }
 
-func stopAccelerationSensorUpdates()->String {
+func stopAccelerationSensorUpdates(intervalSeconds: Double)->String {
     dateDAQEnded = Date()
     var stringreturn = "Acceleration data retrieve failed"
     if let listCMSensorData = sensorrecorder.accelerometerData(from: dateDAQStarted, to: dateDAQEnded){
@@ -46,12 +46,15 @@ func stopAccelerationSensorUpdates()->String {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let docsDirect = paths[0]
         let fileURL = docsDirect.appendingPathComponent(sensorDataFileName)
-        let stringfirstline = "Accelerometer DAQ started at \(convertDateTimeString(now: dateDAQStarted))\nTimestamp,AxelX,AxelY,AxelZ\n"
+        let stringfirstline = "\(convertDateTimeString(now: dateDAQStarted))\nTimestamp,AxelX,AxelY,AxelZ\n"
         creatDataFile(onetimestring: stringfirstline, fileurl: fileURL)
+        let tol: Double = 1.0/(50*100) // intervalSeconds must be smaller than 100 [s] in this case.
         for (index, data) in (listCMSensorData.enumerated()) {
-            let stringData = "\((data as AnyObject).timestamp!),\((data as AnyObject).acceleration.x),\((data as AnyObject).acceleration.y),\((data as AnyObject).acceleration.z)\n"
-            appendDataToFile(string: stringData, fileurl: fileURL)
-            //print(index, data)
+            if (abs(Double(index).remainder(dividingBy: intervalSeconds*50.0)) < tol) {
+                let stringData = "\((data as AnyObject).timestamp!),\((data as AnyObject).acceleration.x),\((data as AnyObject).acceleration.y),\((data as AnyObject).acceleration.z)\n"
+                appendDataToFile(string: stringData, fileurl: fileURL)
+                //print(index, data)
+            }
         }
         
     }
