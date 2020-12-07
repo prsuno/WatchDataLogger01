@@ -17,7 +17,7 @@ var dateDAQEnded = Date()
 
 struct ContentView: View {
     
-    var valueSensingDurations = [1.0, 10, 30, 60, 120, 240, 480, 720]
+    var valueSensingDurations = [1, 10, 30, 60, 120, 240, 480, 720]
     var valueSensingTypes = ["Audio", "Motion", "HeartRate", "Motion and HeartRate", "Acceleration"]
     var valueSensingIntervals = [1.0, 2.0, 5.0, 10, 60, 0.5, 0.1, 0.05, 0.01]
     
@@ -55,7 +55,7 @@ struct ContentView: View {
                         workoutInProgress = true
                         self.strStatus = startMotionSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "Acceleration" {
-                        self.strStatus = startAccelerationSensorUpdates(durationMinutes: self.valueSensingDurations[self.intSelectedDuration])
+                        self.strStatus = startAccelerationSensorUpdates(durationMinutes: Double(self.valueSensingDurations[self.intSelectedDuration]))
                     }
                 })
                     {
