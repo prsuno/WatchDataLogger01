@@ -18,7 +18,7 @@ var dateDAQEnded = Date()
 struct ContentView: View {
     
     var valueSensingDurations = [1, 10, 30, 60, 120, 240, 480, 720]
-    var valueSensingTypes = ["Audio", "Motion", "HeartRate", "Motion and HeartRate", "Acceleration"]
+    var valueSensingTypes = ["Audio", "Motion", "HeartRate", "Accel and HeartRate", "Acceleration"]
     var valueSensingIntervals = [1.0, 2.0, 5.0, 10, 60, 0.5, 0.1, 0.05, 0.01]
     
     var workoutSession: WorkoutManager
@@ -44,34 +44,32 @@ struct ContentView: View {
                         self.strStatus = self.startAudioRecording()
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "Motion" {
                         self.strStatus = startMotionSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
-                        //self.startWorkoutSession()
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "HeartRate" {
                         workoutSession.requestAuthorization()
                         workoutSession.startWorkout()
                         workoutInProgress = true
-                    } else if self.valueSensingTypes[self.intSelectedTypes] == "Motion and HeartRate" {
+                    } else if self.valueSensingTypes[self.intSelectedTypes] == "Accel and HeartRate" {
                         workoutSession.requestAuthorization()
                         workoutSession.startWorkout()
                         workoutInProgress = true
-                        self.strStatus = startMotionSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
+                        self.strStatus = startAccelerationSensorUpdates(durationMinutes: Double(self.valueSensingDurations[self.intSelectedDuration]))
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "Acceleration" {
                         self.strStatus = startAccelerationSensorUpdates(durationMinutes: Double(self.valueSensingDurations[self.intSelectedDuration]))
                     }
                 })
                     {
-                    Text("Start sensor DAQ")
+                    Text("Start DAQ")
                 }
                 Button(action:{
                     if self.valueSensingTypes[self.intSelectedTypes] == "Audio" {
                         self.strStatus = self.finishAudioRecording()
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "Motion" {
                         self.strStatus = stopMotionSensorUpdates()
-                        //self.stopWorkoutSession()
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "HeartRate" {
                         workoutSession.endWorkout()
                         workoutInProgress = false
-                    } else if self.valueSensingTypes[self.intSelectedTypes] == "Motion and HeartRate" {
-                        self.strStatus = stopMotionSensorUpdates()
+                    } else if self.valueSensingTypes[self.intSelectedTypes] == "Accel and HeartRate" {
+                        self.strStatus = stopAccelerationSensorUpdates(intervalSeconds: self.valueSensingIntervals[self.intSelectedInterval])
                         workoutSession.endWorkout()
                         workoutInProgress = false
                     } else if self.valueSensingTypes[self.intSelectedTypes] == "Acceleration" {
@@ -79,7 +77,7 @@ struct ContentView: View {
                     }
                 })
                     {
-                    Text("Stop sensor DAQ")
+                    Text("Stop DAQ / Retrieve data")
                 }
                 Button(action:{
                     self.strStatus = self.fileTransfer(fileURL: self.getSensorDataFileURL(), metaData: ["":""])
@@ -87,12 +85,12 @@ struct ContentView: View {
                     {
                     Text("Send sensor data")
                 }
-                Picker("Sensing duration [min]", selection: $intSelectedDuration){
+                Picker("DAQ duration [min]", selection: $intSelectedDuration){
                     ForEach(0 ..< valueSensingDurations.count) {
                         Text(String(self.valueSensingDurations[$0]))
                     }
                 }.frame(height: 40)
-                Picker("Sensing data type", selection: $intSelectedTypes){
+                Picker("Sensing type", selection: $intSelectedTypes){
                     ForEach(0 ..< valueSensingTypes.count) {
                         Text(self.valueSensingTypes[$0])
                     }

@@ -19,7 +19,6 @@ import CoreMotion
 
 extension CMSensorDataList: Sequence {
     public typealias Iterator = NSFastEnumerationIterator
-
     public func makeIterator() -> NSFastEnumerationIterator {
         return NSFastEnumerationIterator(self)
     }
@@ -41,8 +40,7 @@ func stopAccelerationSensorUpdates(intervalSeconds: Double)->String {
     dateDAQEnded = Date()
     var stringreturn = "Acceleration data retrieve failed"
     if let listCMSensorData = sensorrecorder.accelerometerData(from: dateDAQStarted, to: dateDAQEnded){
-        stringreturn = "Acceleration data retrieved at \(convertDateTimeString(now: dateDAQEnded))"
-        
+        stringreturn = "Acceleration data retrieved at \(convertDateTimeString(now: dateDAQEnded)) with interval \(intervalSeconds) sec"
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let docsDirect = paths[0]
         let fileURL = docsDirect.appendingPathComponent(sensorDataFileName)
@@ -56,7 +54,6 @@ func stopAccelerationSensorUpdates(intervalSeconds: Double)->String {
                 //print(index, data)
             }
         }
-        
     }
     return stringreturn
 }
